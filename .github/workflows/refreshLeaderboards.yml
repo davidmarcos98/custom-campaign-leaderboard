@@ -23,7 +23,6 @@ jobs:
       - name: Run campaign leaderboard refresh
         run: node ./scripts/process_campaign.js
 
-      - uses: actions/checkout@v3
       - name: Refresh and commit new leaderboard 📡
         run: |
           node ./scripts/process_campaign.js
