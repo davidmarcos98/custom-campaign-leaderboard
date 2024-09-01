@@ -20,9 +20,6 @@ jobs:
       - name: Setup Node.js ⚙️ - Cache dependencies ⚡ - Install dependencies 🔧
         uses: ./.github/workflows/setup-node
 
-      - name: Run campaign leaderboard refresh
-        run: node ./scripts/process_campaign.js
-
       - name: Refresh and commit new leaderboard 📡
         run: |
           node ./scripts/process_campaign.js

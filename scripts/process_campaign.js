@@ -76,7 +76,7 @@ const processMap = async (map) => {
         " | " +
         pc.bold(lb.at(-1).position + " positions retrieved")
     );
-    await sleep(1600);
+    await sleep(2000);
   }
   for (let player of lb) {
     addPlayerPoints(player, medals);
