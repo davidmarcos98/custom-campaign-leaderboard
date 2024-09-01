@@ -91,10 +91,10 @@ const processMap = async (map) => {
 
 getCampaign(57861).then(() => {
   console.log("Saving file...");
-  fs.writeFile(`./pages/public/results_${57861}.json`, JSON.stringify(data), (err) => {
+  fs.writeFile(`./public/results_${57861}.json`, JSON.stringify(data), (err) => {
     console.log(err);
   }).then(() => {
-    fs.writeFile(`./pages/public/players_${57861}.json`, JSON.stringify(playerResults), (err) => {
+    fs.writeFile(`./public/players_${57861}.json`, JSON.stringify(playerResults), (err) => {
       console.log(err);
     }).then(() => {
       process.exit();
