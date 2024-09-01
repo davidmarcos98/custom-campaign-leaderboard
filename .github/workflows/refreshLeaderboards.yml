@@ -1,9 +1,8 @@
 # File: .github/workflows/refreshLeaderboards.yml
 name: refresh-leaderboards
 on:
-  push:
   schedule:
-    - cron: "*/1 * * * *"
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: write
@@ -15,7 +14,7 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
 
       - name: Setup Node.js ⚙️ - Cache dependencies ⚡ - Install dependencies 🔧
         uses: ./.github/workflows/setup-node

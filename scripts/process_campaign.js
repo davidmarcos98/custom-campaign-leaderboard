@@ -64,6 +64,7 @@ const processMap = async (map) => {
     },
   };
   let lb = await map.leaderboardLoadMore();
+  await sleep(3000);
   while (lb.length < 200 && lb.length > 0 && lb.at(-1).time <= medals.bronze) {
     lb = await map.leaderboardLoadMore();
     console.log(
@@ -76,7 +77,7 @@ const processMap = async (map) => {
         " | " +
         pc.bold(lb.at(-1).position + " positions retrieved")
     );
-    await sleep(2000);
+    await sleep(3000);
   }
   for (let player of lb) {
     addPlayerPoints(player, medals);
