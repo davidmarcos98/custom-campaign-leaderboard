@@ -1,6 +1,7 @@
 # File: .github/workflows/refreshLeaderboards.yml
 name: refresh-leaderboards
 on:
+  push: *
   schedule:
     - cron: "*/5 * * * *"
 
