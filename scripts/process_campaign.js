@@ -64,7 +64,7 @@ const processMap = async (map) => {
     },
   };
   let lb = await map.leaderboardLoadMore();
-  while (lb.length > 0 && lb.at(-1).time <= medals.bronze) {
+  while (data[map.id].leaderboard.length < 200 && lb.length > 0 && lb.at(-1).time <= medals.bronze) {
     lb = await map.leaderboardLoadMore();
     console.log(
       "Getting leaderboard for " +
