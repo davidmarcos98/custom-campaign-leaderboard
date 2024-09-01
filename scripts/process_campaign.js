@@ -11,7 +11,9 @@ const POINTS_TOP_10 = "15,12,10,8,6,5,4,3,2,1"
   .map((i) => parseInt(i));
 
 const CLUB_ID = "2270";
-const data = {};
+const data = {CAMPAIGN_ID: {
+  maps: {}
+}};
 const playerResults = {};
 
 const getCampaign = async (CAMPAIGN_ID) => {
@@ -21,6 +23,11 @@ const getCampaign = async (CAMPAIGN_ID) => {
     (clubId = CLUB_ID),
     (id = CAMPAIGN_ID)
   );
+  data[CAMPAIGN_ID].id = CAMPAIGN_ID;
+  data[CAMPAIGN_ID].name = campaign.name;
+  data[CAMPAIGN_ID].image = campaign.image;
+  data[CAMPAIGN_ID].mapCount = campaign.mapCount;
+
   let maps = await campaign.maps();
   for (let map of maps) {
     await processMap(map);
@@ -51,7 +58,7 @@ const addPlayerPoints = (player, medals) => {
 
 const processMap = async (map) => {
   let medals = map.medalTimes;
-  data[map.id] = {
+  data[CAMPAIGN_ID].maps[map.id] = {
     mapId: map.id,
     mapName: map.name,
     author: map.authorName,
