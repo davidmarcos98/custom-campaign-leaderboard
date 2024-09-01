@@ -4,8 +4,8 @@ on:
   push:
     branches:
         - "*"
-  schedule:
-    - cron: "*/5 * * * *"
+#  schedule:
+#    - cron: "*/5 * * * *"
 
 permissions:
   contents: write
@@ -30,5 +30,6 @@ jobs:
         run: |
           git config --global user.name "Refresh lb action"
           git config --global user.email "actions@github.com"
-          git commit -am "Update leaderboard"
+          git add .
+          git commit -m "Update leaderboard"
           git push
