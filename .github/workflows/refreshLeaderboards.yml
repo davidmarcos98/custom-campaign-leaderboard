@@ -27,5 +27,5 @@ jobs:
           git config --global user.name "Refresh lb action"
           git config --global user.email "actions@github.com"
           git add .
-          git commit -m "Update leaderboard"
+          git commit -m "Update leaderboard" || echo "No changes to commit"
           git push || echo "No changes to commit"

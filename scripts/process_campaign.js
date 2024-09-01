@@ -55,6 +55,8 @@ const processMap = async (map) => {
     mapId: map.id,
     mapName: map.name,
     author: map.authorName,
+    thumbnail: map.thumbnail,
+    id: map.id,
     leaderboard: [],
     medals: {
       at: medals.author,
