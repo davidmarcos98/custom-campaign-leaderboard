@@ -1,6 +1,7 @@
 # File: .github/workflows/refreshLeaderboards.yml
 name: refresh-leaderboards
 on:
+  workflow_dispatch:
   schedule:
     - cron: "*/5 * * * *"
 
@@ -27,4 +28,4 @@ jobs:
           git config --global user.email "actions@github.com"
           git add .
           git commit -m "Update leaderboard"
-          git push
+          git push || echo "No changes to commit"
