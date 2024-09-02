@@ -87,6 +87,7 @@ const processMap = async (map, CAMPAIGN_ID) => {
   let lb = await map.leaderboardLoadMore();
   await sleep(3000);
   while (lb.length > 0 && lb.at(-1).time <= medals.bronze) {
+    let curLen = lb.length;
     lb = await map.leaderboardLoadMore();
     console.log(
       "Getting leaderboard for " +
@@ -98,6 +99,9 @@ const processMap = async (map, CAMPAIGN_ID) => {
         " | " +
         pc.bold(lb.at(-1).position + " positions retrieved")
     );
+    if (lb.length == curLen) {
+      break;
+    }
     await sleep(3000);
   }
   for (let player of lb) {
