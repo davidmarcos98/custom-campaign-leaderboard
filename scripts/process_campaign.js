@@ -11,9 +11,7 @@ const POINTS_TOP_10 = "15,12,10,8,6,5,4,3,2,1"
   .map((i) => parseInt(i));
 
 const CLUB_ID = "2270";
-const data = {CAMPAIGN_ID: {
-  maps: {}
-}};
+const data = {};
 const playerResults = {};
 
 const getCampaign = async (CAMPAIGN_ID) => {
@@ -23,14 +21,15 @@ const getCampaign = async (CAMPAIGN_ID) => {
     (clubId = CLUB_ID),
     (id = CAMPAIGN_ID)
   );
-  data[CAMPAIGN_ID].id = CAMPAIGN_ID;
-  data[CAMPAIGN_ID].name = campaign.name;
-  data[CAMPAIGN_ID].image = campaign.image;
-  data[CAMPAIGN_ID].mapCount = campaign.mapCount;
+  data.maps = []
+  data.id = CAMPAIGN_ID;
+  data.name = campaign.name;
+  data.image = campaign.image;
+  data.mapCount = campaign.mapCount;
 
   let maps = await campaign.maps();
   for (let map of maps) {
-    await processMap(map);
+    await processMap(map, CAMPAIGN_ID);
   }
 };
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -56,9 +55,17 @@ const addPlayerPoints = (player, medals) => {
   playerResults[player.playerName] += points;
 };
 
-const processMap = async (map) => {
+const processMap = async (map, CAMPAIGN_ID) => {
+  console.log(
+    "Getting leaderboard for " +
+      pc.bold(
+        pc.green(
+          map.name.replace(/\$[0-9A-Fa-f]{3}/g, "").replace(/\$[a-zA-Z]/g, "")
+        )
+      )
+  );
   let medals = map.medalTimes;
-  data[CAMPAIGN_ID].maps[map.id] = {
+  let mapData = {
     mapId: map.id,
     mapName: map.name,
     author: map.authorName,
@@ -91,12 +98,13 @@ const processMap = async (map) => {
   for (let player of lb) {
     addPlayerPoints(player, medals);
 
-    data[map.id].leaderboard.push({
+    mapData.leaderboard.push({
       position: player.position,
       time: player.time,
       player: player.playerName,
     });
   }
+  data.maps.push(mapData)
 };
 
 getCampaign(57861).then(() => {
@@ -104,7 +112,20 @@ getCampaign(57861).then(() => {
   fs.writeFile(`./public/results_${57861}.json`, JSON.stringify(data), (err) => {
     console.log(err);
   }).then(() => {
-    fs.writeFile(`./public/players_${57861}.json`, JSON.stringify(playerResults), (err) => {
+    let lb = []
+    Object.keys(playerResults).forEach(player => {
+      lb.push({
+        position: 0,
+        player: player,
+        points: playerResults[player]
+      })
+    });
+    lb.sort((a, b) => b.points - a.points);
+    lb.forEach((user, index) => {
+      user.position = index + 1;
+    })
+
+    fs.writeFile(`./public/players_${57861}.json`, JSON.stringify(lb), (err) => {
       console.log(err);
     }).then(() => {
       process.exit();
