@@ -13,6 +13,7 @@ const POINTS_TOP_10 = "15,12,10,8,6,5,4,3,2,1"
 const CLUB_ID = "2270";
 const data = {};
 const playerResults = {};
+const playerIds = {};
 
 const getCampaign = async (CAMPAIGN_ID) => {
   console.log(`Getting campaign ${CAMPAIGN_ID} from club ${CLUB_ID}`);
@@ -71,6 +72,8 @@ const processMap = async (map, CAMPAIGN_ID) => {
     author: map.authorName,
     thumbnail: map.thumbnail,
     id: map.id,
+    uid: map.uid,
+    url: map.url,
     leaderboard: [],
     medals: {
       at: medals.author,
@@ -81,7 +84,7 @@ const processMap = async (map, CAMPAIGN_ID) => {
   };
   let lb = await map.leaderboardLoadMore();
   await sleep(3000);
-  while (lb.length < 200 && lb.length > 0 && lb.at(-1).time <= medals.bronze) {
+  while (lb.length < 100 && lb.length > 0 && lb.at(-1).time <= medals.bronze) {
     lb = await map.leaderboardLoadMore();
     console.log(
       "Getting leaderboard for " +
@@ -97,12 +100,13 @@ const processMap = async (map, CAMPAIGN_ID) => {
   }
   for (let player of lb) {
     addPlayerPoints(player, medals);
-
     mapData.leaderboard.push({
       position: player.position,
       time: `${player.time/1000}s`,
       player: player.playerName,
+      id: player._data.player.id
     });
+    playerIds[player.playerName] = player._data.player.id;
   }
   data.maps.push(mapData)
 };
@@ -117,7 +121,8 @@ getCampaign(57861).then(() => {
       lb.push({
         position: 0,
         player: player,
-        points: playerResults[player]
+        points: playerResults[player],
+        id: playerIds[player]
       })
     });
     lb.sort((a, b) => b.points - a.points);
