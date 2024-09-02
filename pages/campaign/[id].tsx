@@ -39,7 +39,24 @@ function cleanMapName(name: string) {
     const cleanedString = name.replace(hexColorRegex, '');
 
     return cleanedString;  
-} 
+}
+
+interface Campaign {
+    id: number,
+    enabled: boolean
+}
+
+const campaigns: Campaign[] = [{id: 57861, enabled: true}, {id: 57861, enabled: false}, {id: 57861, enabled: false}, {id: 57861, enabled: false}, {id: 57861, enabled: false}, ]
+export async function getStaticPaths() {
+    return {
+      paths: [{ params: { id: '57861' } }],
+      fallback: false
+    }
+}
+export async function getStaticProps() {
+    return { props: {  } }
+}
+
 
 export default function Campaign() {
     const router = useRouter()
