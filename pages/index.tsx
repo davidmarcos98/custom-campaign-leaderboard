@@ -20,10 +20,10 @@ export default function IndexPage() {
         <div style={{ height: "10vh", width: "fit-content" }}>
           <motion.svg
             xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 300 140"
+            viewBox="0 0 300 130"
             className="item"
             fillRule="evenodd"
-            style={{ width: "100%", height: "fit-content", maxHeight: "14vh", backgroundColor: "rgba(255, 255, 255, 0.2)", borderRadius: "30px", padding: "15px", paddingRight: "5px" }}
+            style={{ width: "100%", height: "fit-content", maxHeight: "14vh", backgroundColor: "rgba(255, 255, 255, 0.2)", borderRadius: "30px", padding: "15px", paddingRight: "5px", paddingBottom: "8px" }}
           >
             <motion.path
               transform="translate(5, 5)"

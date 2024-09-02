@@ -14,10 +14,12 @@ const CLUB_ID = "2270";
 const data = {};
 const playerResults = {};
 const playerIds = {};
+const CAMPAIGN = 642591;
 
 const getCampaign = async (CAMPAIGN_ID) => {
   console.log(`Getting campaign ${CAMPAIGN_ID} from club ${CLUB_ID}`);
   let client = new TMIO.Client();
+  client.setUserAgent("Scrapie's Sushi event website: sushi.socr.am, discord:@socramdavid mailto:davidmarcosg98@gmail.com")
   let campaign = await client.campaigns.get(
     (clubId = CLUB_ID),
     (id = CAMPAIGN_ID)
@@ -111,9 +113,9 @@ const processMap = async (map, CAMPAIGN_ID) => {
   data.maps.push(mapData)
 };
 
-getCampaign(57861).then(() => {
+getCampaign(CAMPAIGN).then(() => {
   console.log("Saving file...");
-  fs.writeFile(`./public/results_${57861}.json`, JSON.stringify(data), (err) => {
+  fs.writeFile(`./public/results_${CAMPAIGN}.json`, JSON.stringify(data), (err) => {
     console.log(err);
   }).then(() => {
     let lb = []
@@ -130,7 +132,7 @@ getCampaign(57861).then(() => {
       user.position = index + 1;
     })
 
-    fs.writeFile(`./public/players_${57861}.json`, JSON.stringify(lb), (err) => {
+    fs.writeFile(`./public/players_${CAMPAIGN}.json`, JSON.stringify(lb), (err) => {
       console.log(err);
     }).then(() => {
       process.exit();
