@@ -56,12 +56,12 @@ export default function Campaign() {
         }
     }, [selectedTab])
 
-    let campaignData: CampaignData = require(`../../public/results_${router.query.id}.json`);
-    let leaderboardData: User[] = require(`../../public/players_${router.query.id}.json`);
+    let campaignData: CampaignData = router.query.id ? require(`../../public/results_${router.query.id}.json`) : {};
+    let leaderboardData: User[] = router.query.id ? require(`../../public/players_${router.query.id}.json`) : [];
     return (
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full h-full">
-            <p className='text-4xl font-bold'>{campaignData.name}</p>
-            { selectedTab != "notyet" && (
+            <p className='text-4xl font-bold'>{campaignData.name || ""}</p>
+            { (selectedTab != "notyet" && campaignData && leaderboardData.length > 0) && (
                 <Tabs onSelectionChange={(key) => setSelectedTab(key as string)} selectedKey={selectedTab}>
                     <Tab key='leaderboard' title='Leaderboard'>
                         <div id="leaderboardTable" className="xl:w-[30vw] lg:w-[40vw] md:w-[50vw] w-[90vw]">
