@@ -1,5 +1,5 @@
 import DefaultLayout from "@/layouts/default";
-import users from "../public/players_57861.json";
+import users from "../public/players_76165.json";
 import Link from 'next/link';
 
 import React from "react";
