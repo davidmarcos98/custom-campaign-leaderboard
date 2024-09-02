@@ -18,8 +18,8 @@ export default function DefaultLayout({
         <Link
           isExternal
           className="flex items-center gap-1 text-current"
-          href=""
-          title="nextui.org homepage"
+          href="https://throne.com/socramdavid"
+          title=""
         >
           <p className="text-secondary underline font-medium">Made by @socramdavid</p>&nbsp;&nbsp;&nbsp;&nbsp;
         </Link>
