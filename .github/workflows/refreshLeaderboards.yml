@@ -1,9 +1,9 @@
 # File: .github/workflows/refreshLeaderboards.yml
 name: refresh-leaderboards
 on:
-  workflow_dispatch:
   schedule:
-    - cron: "1/6 * * * *"
+    - cron: '1/6 * * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
