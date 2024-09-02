@@ -100,7 +100,7 @@ const processMap = async (map, CAMPAIGN_ID) => {
 
     mapData.leaderboard.push({
       position: player.position,
-      time: player.time,
+      time: `${player.time/1000}s`,
       player: player.playerName,
     });
   }
