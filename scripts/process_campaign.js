@@ -14,7 +14,7 @@ const CLUB_ID = "2270";
 const data = {};
 const playerResults = {};
 const playerIds = {};
-const CAMPAIGN = 642591;
+const CAMPAIGN = 76165;
 
 const getCampaign = async (CAMPAIGN_ID) => {
   console.log(`Getting campaign ${CAMPAIGN_ID} from club ${CLUB_ID}`);

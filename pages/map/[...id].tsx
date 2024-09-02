@@ -44,11 +44,11 @@ function cleanMapName(name: string) {
 export async function getStaticPaths() {
     return {
       paths: [
-        { params: { id: ["642591", "ad5dcebc-4ad8-4726-9521-f7af015dcfb0"] } },
-        { params: { id: ["642591", "414a124f-c621-47da-a0e3-fcf37fec6ab8"] } },
-        { params: { id: ["642591", "d93943a0-cb90-416d-bc71-b5a1bd4a6334"] } },
-        { params: { id: ["642591", "26f4811e-462c-487f-8cf8-a44c0ecbf1ee"] } },
-        { params: { id: ["642591", "7d5a11bf-bc6b-4511-9930-cd32ab50389e"] } },
+        { params: { id: ["76165", "ad5dcebc-4ad8-4726-9521-f7af015dcfb0"] } },
+        { params: { id: ["76165", "414a124f-c621-47da-a0e3-fcf37fec6ab8"] } },
+        { params: { id: ["76165", "d93943a0-cb90-416d-bc71-b5a1bd4a6334"] } },
+        { params: { id: ["76165", "26f4811e-462c-487f-8cf8-a44c0ecbf1ee"] } },
+        { params: { id: ["76165", "7d5a11bf-bc6b-4511-9930-cd32ab50389e"] } },
     ],
       fallback: false
     }

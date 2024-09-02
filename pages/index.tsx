@@ -10,7 +10,7 @@ interface Campaign {
   id: number,
   enabled: boolean
 }
-const campaigns: Campaign[] = [{id: 642591, enabled: true}, {id: 642591, enabled: false}, {id: 642591, enabled: false}, {id: 642591, enabled: false}, {id: 642591, enabled: false}, ]
+const campaigns: Campaign[] = [{id: 76165, enabled: true}, {id: 76165, enabled: false}, {id: 76165, enabled: false}, {id: 76165, enabled: false}, {id: 76165, enabled: false}, ]
 const delay = 1;
 
 export default function IndexPage() {
