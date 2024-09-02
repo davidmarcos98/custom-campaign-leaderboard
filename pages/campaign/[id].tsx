@@ -46,10 +46,10 @@ interface Campaign {
     enabled: boolean
 }
 
-const campaigns: Campaign[] = [{id: 57861, enabled: true}, {id: 57861, enabled: false}, {id: 57861, enabled: false}, {id: 57861, enabled: false}, {id: 57861, enabled: false}, ]
+const campaigns: Campaign[] = [{id: 642591, enabled: true}, {id: 642591, enabled: false}, {id: 642591, enabled: false}, {id: 642591, enabled: false}, {id: 642591, enabled: false}, ]
 export async function getStaticPaths() {
     return {
-      paths: [{ params: { id: '57861' } }],
+      paths: [{ params: { id: '642591' } }],
       fallback: false
     }
 }
