@@ -110,8 +110,9 @@ export default function Map() {
                         <Link href={`https://trackmania.io/#/leaderboard/${mapData.uid}`} target='_blank'><p className='text-2xl font-bold'>{cleanMapName(mapData.mapName)}</p></Link>
                         <div className='inline flex gap-3'>
                             {Object.entries(mapData.medals).map(([medal, value]: Array<any>) => (
-                                <Tooltip content={`+${medalPoints[medal as keyof typeof medalPoints]} points`}>
-                                    <Chip 
+                                <Tooltip key={medal} content={`+${medalPoints[medal as keyof typeof medalPoints]} points`}>
+                                    <Chip
+                                        key={medal} 
                                         size='md'
                                         classNames={{
                                             base: "h-auto",

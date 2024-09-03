@@ -85,7 +85,7 @@ export default function Campaign() {
     return (
         <DefaultLayout>
             <section className="flex flex-col items-center justify-center gap-4 py-3 md:py-4 w-full h-full">
-                <p className='text-4xl font-bold'>{campaignData.name || ""}</p>
+                <p id="campaignName" className='text-4xl font-bold'>{campaignData.name || ""}</p>
                 { (selectedTab != "notyet" && campaignData && leaderboardData.leaderboard.length > 0) && (
                     <Tabs onSelectionChange={(key) => setSelectedTab(key as string)} selectedKey={selectedTab}>
                         <Tab key='leaderboard' title='Leaderboard'>

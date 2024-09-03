@@ -1,4 +1,4 @@
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Input} from "@nextui-org/react";
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Input, Tooltip} from "@nextui-org/react";
 import { SearchIcon } from "../components/SearchIcon";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
@@ -10,6 +10,18 @@ export interface User {
     player: string,
     id: string
 }
+const rankingPoints = {
+    1: 15,
+    2: 12,
+    3: 10,
+    4: 8,
+    5: 6,
+    6: 5,
+    7: 4,
+    8: 3,
+    9: 2,
+    10: 1
+}
 
 const TableView = ({users, updated, columns=["position", "player", "points"]} : {users: User[], updated: number, columns?: string[]}) => {
     const [page, setPage] = useState(1);
@@ -20,11 +32,19 @@ const TableView = ({users, updated, columns=["position", "player", "points"]} : 
     useEffect(() => {
         let topContentHeight = parseInt(getComputedStyle(document.getElementsByClassName('topContent')[0]).height.split("px")[0]);
         let headerHeight = parseInt(getComputedStyle(document.getElementsByTagName('header')[0]).height.split("px")[0]);
+        let tabsHeight = 0;
+        if (document.querySelectorAll('[role="tablist"]').length > 0){
+            tabsHeight = parseInt(getComputedStyle(document.querySelectorAll('[role="tablist"]')[0] as Element).height.split("px")[0]);
+        }
         let campaignSelectorHeight = 0;
         if (document.getElementById('campaignSelector')){
             campaignSelectorHeight = parseInt(getComputedStyle(document.getElementById('campaignSelector') as Element).height.split("px")[0]);
         }
-        setRowsPerPage(Math.floor((window.innerHeight - topContentHeight*2 - campaignSelectorHeight - headerHeight) / 60))
+        let campaignNameHeight = 0;
+        if (document.getElementById('campaignName')){
+            campaignNameHeight = parseInt(getComputedStyle(document.getElementById('campaignName') as Element).height.split("px")[0]);
+        }
+        setRowsPerPage(Math.floor((window.innerHeight - topContentHeight*2 - campaignSelectorHeight - campaignNameHeight - headerHeight - tabsHeight) / 55))
     }, [])
     
     useEffect(() => {
@@ -139,6 +159,19 @@ const TableView = ({users, updated, columns=["position", "player", "points"]} : 
                                             {getKeyValue(item, columnKey)}
                                         </Link>
                                     </TableCell>
+                                )
+                            } else if (columnKey == "position"){
+                                if (item.position <= 10){
+                                    return (
+                                        <TableCell>
+                                            <Tooltip content={`+${rankingPoints[item.position as keyof typeof rankingPoints]} extra points!`}>
+                                                {getKeyValue(item, columnKey)}
+                                            </Tooltip>
+                                        </TableCell>
+                                    )
+                                }
+                                return (
+                                    <TableCell>{getKeyValue(item, columnKey)}</TableCell>
                                 )
                             } else {
                                 return (
