@@ -10,6 +10,7 @@ export default function DefaultLayout({
 }) {
   return (
     <div className="relative flex flex-col h-screen">
+      <title>SUSHI</title>
       <header className="flex flex-col items-center justify-center gap-4 pt-8 md:pt-10 w-full">
         <Link href="/">
         <div style={{ height: "10vh", width: "fit-content" }}>
