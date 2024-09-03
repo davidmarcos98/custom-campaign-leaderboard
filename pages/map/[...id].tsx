@@ -1,7 +1,8 @@
 import { useRouter } from 'next/router'
-import {Tabs, Tab} from '@nextui-org/react'
-import TableView, {User} from '@/components/table'
+import { Chip, Image, Tooltip } from '@nextui-org/react'
+import TableView from '@/components/table'
 import Link from 'next/link'
+import DefaultLayout from '@/layouts/default'
 
 interface Position {
     position: number,
@@ -27,11 +28,18 @@ interface CampaignData {
     id: number,
     image: string,
     mapCount: number,
-    maps: Map[]
+    maps: Map[],
+    updateTime: number
+}
+
+const medalPoints = {
+    at: 5,
+    gold: 3,
+    silver: 2,
+    bronze: 1
 }
 
 function cleanMapName(name: string) {
-    console.log(name)
     name = name.replace(/\$[oiwnmtsgz$]/g, '')
     const hexColorRegex = /\$[0-9A-Fa-f]{3}/g; 
 
@@ -57,10 +65,31 @@ export async function getStaticProps() {
     return { props: {} }
 }
 
+function formatMilliseconds(milliseconds: number) {
+    // Ensure the input is a valid number
+    if (isNaN(milliseconds) || milliseconds < 0) {
+      return "Invalid input";
+    }
+  
+    // Calculate minutes, seconds, and remaining milliseconds
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    const remainingMilliseconds = milliseconds % 1000;
+  
+    // Format the output with leading zeros
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(seconds).padStart(2, '0');
+    const formattedMilliseconds = String(remainingMilliseconds).padStart(3, '0');
+  
+    return `${minutes ? formattedMinutes + ':' : ''}${formattedSeconds}.${formattedMilliseconds}`;
+  }
+  
+
 export default function Map() {
     const router = useRouter()
     let mapData;
-    console.log(router.query)
+    let updateTime = 0;
     if (router.query.mapData) {
         mapData = JSON.parse(router.query.mapData as string)
     } else if(router.query.id){
@@ -70,17 +99,39 @@ export default function Map() {
                 mapData = map;
             }
         })
+        updateTime = campaignData.updateTime;
     }
-    
+
     return (
         <>
             {mapData && (
-                <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full h-full">
-                    <Link href={`https://trackmania.io/#/leaderboard/${mapData.uid}`} target='_blank'><p className='text-2xl font-bold'>{cleanMapName(mapData.mapName)}</p></Link>
-                    <div id="leaderboardTable" className="xl:w-[30vw] lg:w-[40vw] md:w-[50vw] w-[90vw]">
-                        <TableView users={mapData.leaderboard} columns={["position", "player", "time"]}/>
-                    </div>
-                </section>
+                <DefaultLayout>
+                    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full h-full">
+                        <Link href={`https://trackmania.io/#/leaderboard/${mapData.uid}`} target='_blank'><p className='text-2xl font-bold'>{cleanMapName(mapData.mapName)}</p></Link>
+                        <div className='inline flex gap-3'>
+                            {Object.entries(mapData.medals).map(([medal, value]: Array<any>) => (
+                                <Tooltip content={`+${medalPoints[medal as keyof typeof medalPoints]} points`}>
+                                    <Chip 
+                                        size='md'
+                                        classNames={{
+                                            base: "h-auto",
+                                            content: "py-1"
+                                        }}
+                                    >
+                                        <div className='inline flex items-center'>
+                                            <Image src={`/${medal}.png`} width={30}/>
+                                            &nbsp;
+                                            <p className='text-md font-semibold'>{ formatMilliseconds(value) }</p>
+                                        </div>
+                                    </Chip>
+                                </Tooltip>
+                            ))}
+                        </div>
+                        <div id="leaderboardTable" className="xl:w-[30vw] lg:w-[40vw] md:w-[50vw] w-[90vw]">
+                            <TableView users={mapData.leaderboard} updated={updateTime} columns={["position", "player", "time"]}/>
+                        </div>
+                    </section>
+                </DefaultLayout>
             )}
         </>
     )

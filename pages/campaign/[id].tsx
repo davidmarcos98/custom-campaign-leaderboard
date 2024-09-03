@@ -3,6 +3,7 @@ import TableView, { User } from '@/components/table'
 import Link from 'next/link';
 import {Card, CardFooter, CardHeader, Tabs, Tab, Image} from "@nextui-org/react";
 import { useEffect, useState } from 'react';
+import DefaultLayout from '@/layouts/default';
 
 interface Position {
     position: number,
@@ -23,12 +24,18 @@ interface Map {
         bronze: number
     }
 }
+
+interface LeaderboardData {
+    leaderboard: User[],
+    updateTime: number
+}
 interface CampaignData {
     name: string,
     id: number,
     image: string,
     mapCount: number,
-    maps: Map[]
+    maps: Map[],
+    updateTime: number
 }
 
 function cleanMapName(name: string) {
@@ -74,46 +81,48 @@ export default function Campaign() {
     }, [selectedTab])
 
     let campaignData: CampaignData = router.query.id ? require(`../../public/results_${router.query.id}.json`) : {};
-    let leaderboardData: User[] = router.query.id ? require(`../../public/players_${router.query.id}.json`) : [];
+    let leaderboardData: LeaderboardData = router.query.id ? require(`../../public/players_${router.query.id}.json`) : [];
     return (
-        <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full h-full">
-            <p className='text-4xl font-bold'>{campaignData.name || ""}</p>
-            { (selectedTab != "notyet" && campaignData && leaderboardData.length > 0) && (
-                <Tabs onSelectionChange={(key) => setSelectedTab(key as string)} selectedKey={selectedTab}>
-                    <Tab key='leaderboard' title='Leaderboard'>
-                        <div id="leaderboardTable" className="xl:w-[30vw] lg:w-[40vw] md:w-[50vw] w-[90vw]">
-                            <TableView users={leaderboardData}/>
-                        </div>
-                    </Tab>
-                    <Tab key='maps' title='Maps'>
-                        <div id="mapsContainer" className='grid grid-cols-3 gap-4 justify-center'>
-                            {campaignData.maps.map(map => (
-                                <Link key={map.id} href={`/map/${campaignData.id}/${map.id}`}>
-                                    <Card
-                                    isFooterBlurred
-                                    radius="lg"
-                                    className="border-none"
-                                >
-                                    <CardHeader style={{ zIndex: 11 }} className='justify-between before:bg-white/10 bg-black/40 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large top-2 left-1/2 transform -translate-x-1/2 w-max shadow-small ml-1 z-10'>
-                                        <p className="text-medium text-white font-bold" color="default">
-                                            {cleanMapName(map.mapName)}<br></br>
-                                        </p>
-                                    </CardHeader>
-                                    <Image
-                                    className="object-cover"
-                                    src={map.thumbnail}
-                                    width="100%"
-                                    />
-                                    <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 right-1 w-[fit-content] shadow-small ml-1 z-10">
-                                        <p className="text-tiny text-white/80 italic">by {map.author}</p>
-                                    </CardFooter>
-                                </Card>
-                                </Link>
-                            ))}
-                        </div>
-                    </Tab>
-                </Tabs>
-            )}
-        </section>
+        <DefaultLayout>
+            <section className="flex flex-col items-center justify-center gap-4 py-3 md:py-4 w-full h-full">
+                <p className='text-4xl font-bold'>{campaignData.name || ""}</p>
+                { (selectedTab != "notyet" && campaignData && leaderboardData.leaderboard.length > 0) && (
+                    <Tabs onSelectionChange={(key) => setSelectedTab(key as string)} selectedKey={selectedTab}>
+                        <Tab key='leaderboard' title='Leaderboard'>
+                            <div id="leaderboardTable" className="xl:w-[30vw] lg:w-[40vw] md:w-[50vw] w-[90vw]">
+                                <TableView users={leaderboardData.leaderboard} updated={leaderboardData.updateTime}/>
+                            </div>
+                        </Tab>
+                        <Tab key='maps' title='Maps'>
+                            <div id="mapsContainer" className='grid grid-cols-2 xl:grid-cols-3 gap-4 justify-center px-10'>
+                                {campaignData.maps.map(map => (
+                                    <Link key={map.id} href={`/map/${campaignData.id}/${map.id}`}>
+                                        <Card
+                                        isFooterBlurred
+                                        radius="lg"
+                                        className="border-none"
+                                    >
+                                        <CardHeader style={{ zIndex: 11 }} className='justify-between before:bg-white/10 bg-black/75 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large top-2 left-1/2 transform -translate-x-1/2 w-max shadow-small ml-1 z-10'>
+                                            <p className="text-large text-white font-bold" color="default">
+                                                {cleanMapName(map.mapName)}<br></br>
+                                            </p>
+                                        </CardHeader>
+                                        <Image
+                                        className="object-cover"
+                                        src={map.thumbnail}
+                                        width="100%"
+                                        />
+                                        <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 right-1 w-[fit-content] shadow-small ml-1 z-10">
+                                            <p className="text-medium font-medium italic">by {map.author}</p>
+                                        </CardFooter>
+                                    </Card>
+                                    </Link>
+                                ))}
+                            </div>
+                        </Tab>
+                    </Tabs>
+                )}
+            </section>
+        </DefaultLayout>
     )
 }

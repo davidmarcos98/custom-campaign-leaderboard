@@ -29,6 +29,10 @@ const getCampaign = async (CAMPAIGN_ID) => {
   data.name = campaign.name;
   data.image = campaign.image;
   data.mapCount = campaign.mapCount;
+  data.updateTime = Date.now();
+
+  playerResults.updateTime = Date.now();
+  playerResults.leaderboard = {}
 
   let maps = await campaign.maps();
   for (let map of maps) {
@@ -38,8 +42,8 @@ const getCampaign = async (CAMPAIGN_ID) => {
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const addPlayerPoints = (player, medals) => {
-  if (!Object.keys(playerResults).includes(player.playerName)) {
-    playerResults[player.playerName] = 0;
+  if (!Object.keys(playerResults.leaderboard).includes(player.playerName)) {
+    playerResults.leaderboard[player.playerName] = 0;
   }
   let points = 0;
   if (player.time <= medals.author) {
@@ -55,7 +59,7 @@ const addPlayerPoints = (player, medals) => {
     points += POINTS_TOP_10[player.position - 1];
   }
 
-  playerResults[player.playerName] += points;
+  playerResults.leaderboard[player.playerName] += points;
 };
 
 const processMap = async (map, CAMPAIGN_ID) => {
@@ -123,11 +127,11 @@ getCampaign(CAMPAIGN).then(() => {
     console.log(err);
   }).then(() => {
     let lb = []
-    Object.keys(playerResults).forEach(player => {
+    Object.keys(playerResults.leaderboard).forEach(player => {
       lb.push({
         position: 0,
         player: player,
-        points: playerResults[player],
+        points: playerResults.leaderboard[player],
         id: playerIds[player]
       })
     });
@@ -136,7 +140,9 @@ getCampaign(CAMPAIGN).then(() => {
       user.position = index + 1;
     })
 
-    fs.writeFile(`./public/players_${CAMPAIGN}.json`, JSON.stringify(lb), (err) => {
+    playerResults.leaderboard = lb;
+
+    fs.writeFile(`./public/players_${CAMPAIGN}.json`, JSON.stringify(playerResults), (err) => {
       console.log(err);
     }).then(() => {
       process.exit();

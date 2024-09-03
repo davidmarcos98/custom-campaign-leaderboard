@@ -2,6 +2,7 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Paginat
 import { SearchIcon } from "../components/SearchIcon";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import moment from "moment";
 
 export interface User {
     position: number,
@@ -10,7 +11,7 @@ export interface User {
     id: string
 }
 
-const TableView = ({users, columns=["position", "player", "points"]} : {users: User[], columns?: string[]}) => {
+const TableView = ({users, updated, columns=["position", "player", "points"]} : {users: User[], updated: number, columns?: string[]}) => {
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(1);
     const [filterValue, setFilterValue] = React.useState("");
@@ -18,7 +19,12 @@ const TableView = ({users, columns=["position", "player", "points"]} : {users: U
 
     useEffect(() => {
         let topContentHeight = parseInt(getComputedStyle(document.getElementsByClassName('topContent')[0]).height.split("px")[0]);
-        setRowsPerPage(Math.floor((window.innerHeight - topContentHeight*2) / 60))
+        let headerHeight = parseInt(getComputedStyle(document.getElementsByTagName('header')[0]).height.split("px")[0]);
+        let campaignSelectorHeight = 0;
+        if (document.getElementById('campaignSelector')){
+            campaignSelectorHeight = parseInt(getComputedStyle(document.getElementById('campaignSelector') as Element).height.split("px")[0]);
+        }
+        setRowsPerPage(Math.floor((window.innerHeight - topContentHeight*2 - campaignSelectorHeight - headerHeight) / 60))
     }, [])
     
     useEffect(() => {
@@ -69,18 +75,18 @@ const TableView = ({users, columns=["position", "player", "points"]} : {users: U
 
     const topContent = React.useMemo(() => {
         return (
-        <div className="flex flex-col gap-4 topContent">
+        <div className="flex flex-col gap-3 topContent">
             <div className="flex justify-between gap-3 items-center">
-            <span className="font-bold text-xl text-medium">&nbsp;Leaderboard</span>
-            <Input
-                isClearable
-                className="w-full sm:max-w-[60%]"
-                placeholder="Search by username..."
-                startContent={<SearchIcon />}
-                value={filterValue}
-                onClear={() => onClear()}
-                onValueChange={onSearchChange}
-            />
+                <span className="font-bold text-xl text-medium">&nbsp;Leaderboard</span>
+                <Input
+                    isClearable
+                    className="w-full sm:max-w-[60%]"
+                    placeholder="Search by username..."
+                    startContent={<SearchIcon />}
+                    value={filterValue}
+                    onClear={() => onClear()}
+                    onValueChange={onSearchChange}
+                />
             </div>
         </div>
         );
@@ -91,56 +97,60 @@ const TableView = ({users, columns=["position", "player", "points"]} : {users: U
         hasSearchFilter,
     ]);
     return (
-        <Table 
-            className="w-full items-center"
-            aria-label="Example table with client side pagination"
-            topContent={topContent}
-            isStriped
-            bottomContent={
-                <div className="flex w-full justify-center">
-                    <Pagination
-                    isCompact
-                    showControls
-                    showShadow
-                    color="secondary"
-                    page={page}
-                    total={pages}
-                    onChange={(page: any) => setPage(page)}
-                    />
-                </div>
-            }
-            classNames={{
-            wrapper: "min-h-[222px] sm:max-w-[100%]",
-            }}
-        >
-            <TableHeader>
-                {columns.map(column => (
-
-                    <TableColumn key={column}>{toTitleCase(column)}</TableColumn>
-                ))}
-            </TableHeader>
-            <TableBody items={items}>
-            {(item: User) => (
-                <TableRow key={item.player}>
-                {(columnKey) => {
-                    if (columnKey == "player") {
-                        return (
-                            <TableCell>
-                                <Link href={`https://trackmania.io/#/player/${item.id}`} target="_blank">
-                                    {getKeyValue(item, columnKey)}
-                                </Link>
-                            </TableCell>
-                        )
-                    } else {
-                        return (
-                            <TableCell>{getKeyValue(item, columnKey)}</TableCell>
-                        )
-                    }
+        <>
+            <div className="flex justify-end p-2 px-3">
+                <p className="text-sm italic">Last updated: {Math.ceil((moment().unix() - updated / 1000)/60)} minutes ago</p>
+            </div>
+            <Table 
+                className="w-full items-center"
+                aria-label="Example table with client side pagination"
+                topContent={topContent}
+                isStriped
+                bottomContent={
+                    <div className="flex w-full justify-center">
+                        <Pagination
+                        isCompact
+                        showControls
+                        showShadow
+                        color="secondary"
+                        page={page}
+                        total={pages}
+                        onChange={(page: any) => setPage(page)}
+                        />
+                    </div>
+                }
+                classNames={{
+                wrapper: "min-h-[222px] sm:max-w-[100%]",
                 }}
-                </TableRow>
-            )}
-            </TableBody>
-        </Table>
+            >
+                <TableHeader>
+                    {columns.map(column => (
+                        <TableColumn key={column}>{toTitleCase(column)}</TableColumn>
+                    ))}
+                </TableHeader>
+                <TableBody items={items}>
+                {(item: User) => (
+                    <TableRow key={item.player}>
+                        {(columnKey) => {
+                            if (columnKey == "player") {
+                                return (
+                                    <TableCell>
+                                        <Link href={`https://trackmania.io/#/player/${item.id}`} target="_blank">
+                                            {getKeyValue(item, columnKey)}
+                                        </Link>
+                                    </TableCell>
+                                )
+                            } else {
+                                return (
+                                    <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+                                )
+                            }
+                        }}
+                    </TableRow>
+                )}
+                </TableBody>
+            </Table>
+        </>
       );
 }
 
