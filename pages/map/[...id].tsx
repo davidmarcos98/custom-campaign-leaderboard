@@ -108,7 +108,7 @@ export default function Map() {
                 <DefaultLayout>
                     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full h-full">
                         <Link href={`https://trackmania.io/#/leaderboard/${mapData.uid}`} target='_blank'><p className='text-2xl font-bold'>{cleanMapName(mapData.mapName)}</p></Link>
-                        <div className='inline flex gap-3'>
+                        <div className='inline flex gap-3' id='medals'>
                             {Object.entries(mapData.medals).map(([medal, value]: Array<any>) => (
                                 <Tooltip key={medal} content={`+${medalPoints[medal as keyof typeof medalPoints]} points`}>
                                     <Chip

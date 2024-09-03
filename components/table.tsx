@@ -44,7 +44,11 @@ const TableView = ({users, updated, columns=["position", "player", "points"]} : 
         if (document.getElementById('campaignName')){
             campaignNameHeight = parseInt(getComputedStyle(document.getElementById('campaignName') as Element).height.split("px")[0]);
         }
-        setRowsPerPage(Math.floor((window.innerHeight - topContentHeight*2 - campaignSelectorHeight - campaignNameHeight - headerHeight - tabsHeight) / 55))
+        let medalsHeight = 0;
+        if (document.getElementById('medals')){
+            medalsHeight = parseInt(getComputedStyle(document.getElementById('medals') as Element).height.split("px")[0]);
+        }
+        setRowsPerPage(Math.floor((window.innerHeight - topContentHeight*2 - campaignSelectorHeight - campaignNameHeight - headerHeight - tabsHeight - medalsHeight) / 55))
     }, [])
     
     useEffect(() => {
