@@ -137,8 +137,6 @@ const processMap = async (map, CAMPAIGN_ID) => {
 };
 
 let campaignsToCheck = []
-let totalStandings = {}
-let finalLb = []
 
 async function doEverything() {
   for (let campaign of campaigns){
@@ -176,37 +174,6 @@ async function doEverything() {
       break;
     }
   }
-  for await (let campaign of campaignsToCheck) {
-    console.log("Reading campaign... ", campaign)
-    try {
-      let data = await fs.readFile(`./public/players_${campaign}.json`)
-      let parsed = JSON.parse(data);
-      console.log("processing")
-      parsed.leaderboard.map(player => {
-        if (!Object.keys(totalStandings).includes(player.player)) {
-          totalStandings[player.player] = player
-        } else {
-          totalStandings[player.player].points += player.points;
-        }
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  Object.values(totalStandings).forEach(player => {
-    player.position = 0;
-    finalLb.push(player)
-  });
-  finalLb.sort((a, b) => b.points - a.points);
-  finalLb.forEach((user, index) => {
-    user.position = index + 1;
-  })
-  
-  fs.writeFile(`./public/main_leaderboard.json`, JSON.stringify({updateTime: Date.now(), leaderboard: finalLb}), (err) => {
-    console.log(err);
-  }).then(() => {
-    process.exit();
-  });
 }
 
 doEverything()
