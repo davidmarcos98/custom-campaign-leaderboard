@@ -29,7 +29,6 @@ export default function IndexPage() {
             }
           })}
         </div>
-        <p>In Maintenance - Not updating right now</p>
         { users.leaderboard.length > 0 &&
           <div id="leaderboardTable" className="xl:w-[30vw] lg:w-[40vw] md:w-[50vw] w-[90vw]">
             <TableView users={users.leaderboard} updated={users.updateTime}></TableView>
