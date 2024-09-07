@@ -1,5 +1,5 @@
 import DefaultLayout from "@/layouts/default";
-import users from "../public/players_76165.json";
+import users from "../public/main_leaderboard.json";
 import Link from 'next/link';
 
 import React from "react";
@@ -16,15 +16,15 @@ export default function IndexPage() {
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 h-full">
         
-        <div id="campaignSelector" className="flex justify-center items-center gap-4">
+        <div id="campaignSelector" className="flex justify-center items-center gap-4 md:pt-2 pt-3">
           {campaigns.map((campaign: Campaign, index: number) => {
             if (campaign.enabled) {
               return (
-                <Link key={campaign.id} href={`/campaign/${campaign.id}`}><p className="text-2xl font-bold underline">Week {index + 1}</p></Link>
+                <Link key={campaign.id} href={`/campaign/${campaign.id}`}><p className="lg:text-2xl md:text-lg text-sm font-bold underline">Week {index + 1}</p></Link>
               )
             } else {
               return (
-                <Link key={campaign.id} href={"/"} className="pointer-events-none"><p className="text-2xl font-bold line-through" style={{ color: "grey" }}>Week {index + 1}</p></Link>
+                <Link key={campaign.id} href={"/"} className="pointer-events-none"><p className="lg:text-2xl sm:text-xl text-sm font-bold line-through" style={{ color: "grey" }}>Week {index + 1}</p></Link>
               )
             }
           })}

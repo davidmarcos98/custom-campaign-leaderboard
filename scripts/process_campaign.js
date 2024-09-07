@@ -14,10 +14,23 @@ const CLUB_ID = "2270";
 const data = {};
 const playerResults = {};
 const playerIds = {};
-const CAMPAIGN = 76165;
+
+const closeDates = [
+  Date.parse('09 Sep 2024 18:00:00 GMT+2'),
+  Date.parse('16 Sep 2024 18:00:00 GMT+2'),
+  Date.parse('23 Sep 2024 18:00:00 GMT+2'),
+  Date.parse('30 Sep 2024 18:00:00 GMT+2'),
+  Date.parse('07 Oct 2024 18:00:00 GMT+2'),
+]
+const campaigns = [
+  76165,
+  null,
+  null,
+  null,
+  null,
+]
 
 const getCampaign = async (CAMPAIGN_ID) => {
-  console.log(`Getting campaign ${CAMPAIGN_ID} from club ${CLUB_ID}`);
   let client = new TMIO.Client();
   client.setUserAgent("Scrapie's Sushi event website: sushi.socr.am, discord:@socramdavid mailto:davidmarcosg98@gmail.com")
   let campaign = await client.campaigns.get(
@@ -30,6 +43,8 @@ const getCampaign = async (CAMPAIGN_ID) => {
   data.image = campaign.image;
   data.mapCount = campaign.mapCount;
   data.updateTime = Date.now();
+  
+  console.log(`Getting campaign ${CAMPAIGN_ID} (${campaign.name}) from club ${CLUB_ID}`);
 
   playerResults.updateTime = Date.now();
   playerResults.leaderboard = {}
@@ -121,31 +136,73 @@ const processMap = async (map, CAMPAIGN_ID) => {
   data.maps.push(mapData)
 };
 
-getCampaign(CAMPAIGN).then(() => {
-  console.log("Saving file...");
-  fs.writeFile(`./public/results_${CAMPAIGN}.json`, JSON.stringify(data), (err) => {
+let campaignsToCheck = []
+let totalStandings = {}
+let finalLb = []
+
+async function doEverything() {
+  for (let campaign of campaigns){
+    let isCurrentCampaign = Date.now() < closeDates[campaigns.indexOf(campaign)];
+    campaignsToCheck.push(campaign);
+    if (isCurrentCampaign && campaign != null) {
+      await getCampaign(campaign).then(() => {
+        console.log("Saving file...");
+        fs.writeFile(`./public/results_${campaign}.json`, JSON.stringify(data), (err) => {
+          console.log(err);
+        }).then(() => {
+          let lb = []
+          Object.keys(playerResults.leaderboard).forEach(player => {
+            lb.push({
+              position: 0,
+              player: player,
+              points: playerResults.leaderboard[player],
+              id: playerIds[player]
+            })
+          });
+          lb.sort((a, b) => b.points - a.points);
+          lb.forEach((user, index) => {
+            user.position = index + 1;
+          })
+      
+          playerResults.leaderboard = lb;
+      
+          fs.writeFile(`./public/players_${campaign}.json`, JSON.stringify(playerResults), (err) => {
+            console.log(err);
+          }).then(() => {
+            process.exit();
+          });
+        });
+      });
+      break;
+    }
+  }
+  for await (let campaign of campaignsToCheck) {
+    await fs.readFile(`./public/players_${campaign}.json`).then((data) => {
+      return JSON.parse(data)}).then(data => {
+        // THIS WOULD BE MUCH CLEANER IN PYTHON
+        data.leaderboard.map(player => {
+          if (!Object.keys(totalStandings).includes(player.player)) {
+            totalStandings[player.player] = player
+          } else {
+            totalStandings[player.player].points += player.points;
+          }
+        })
+      })
+  }
+  Object.values(totalStandings).forEach(player => {
+    player.position = 0;
+    finalLb.push(player)
+  });
+  finalLb.sort((a, b) => b.points - a.points);
+  finalLb.forEach((user, index) => {
+    user.position = index + 1;
+  })
+  
+  fs.writeFile(`./public/main_leaderboard.json`, JSON.stringify({updateTime: Date.now(), leaderboard: finalLb}), (err) => {
     console.log(err);
   }).then(() => {
-    let lb = []
-    Object.keys(playerResults.leaderboard).forEach(player => {
-      lb.push({
-        position: 0,
-        player: player,
-        points: playerResults.leaderboard[player],
-        id: playerIds[player]
-      })
-    });
-    lb.sort((a, b) => b.points - a.points);
-    lb.forEach((user, index) => {
-      user.position = index + 1;
-    })
-
-    playerResults.leaderboard = lb;
-
-    fs.writeFile(`./public/players_${CAMPAIGN}.json`, JSON.stringify(playerResults), (err) => {
-      console.log(err);
-    }).then(() => {
-      process.exit();
-    });
+    process.exit();
   });
-});
+}
+
+doEverything()
