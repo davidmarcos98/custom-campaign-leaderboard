@@ -177,6 +177,7 @@ async function doEverything() {
     }
   }
   for await (let campaign of campaignsToCheck) {
+    console.log("Reading campaign... ", campaign)
     await fs.readFile(`./public/players_${campaign}.json`).then((data) => {
       return JSON.parse(data)}).then(data => {
         // THIS WOULD BE MUCH CLEANER IN PYTHON
