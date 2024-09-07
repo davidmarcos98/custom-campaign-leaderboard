@@ -105,7 +105,7 @@ const processMap = async (map, CAMPAIGN_ID) => {
   };
   let lb = await map.leaderboardLoadMore();
   await sleep(3000);
-  while (lb.length > 0 && lb.at(-1).time <= medals.bronze) {
+  while (lb.length < 200 && lb.at(-1).time <= medals.bronze) {
     let curLen = lb.length;
     lb = await map.leaderboardLoadMore();
     console.log(
@@ -178,17 +178,20 @@ async function doEverything() {
   }
   for await (let campaign of campaignsToCheck) {
     console.log("Reading campaign... ", campaign)
-    await fs.readFile(`./public/players_${campaign}.json`).then((data) => {
-      return JSON.parse(data)}).then(data => {
-        // THIS WOULD BE MUCH CLEANER IN PYTHON
-        data.leaderboard.map(player => {
-          if (!Object.keys(totalStandings).includes(player.player)) {
-            totalStandings[player.player] = player
-          } else {
-            totalStandings[player.player].points += player.points;
-          }
-        })
+    try {
+      let data = await fs.readFile(`./public/players_${campaign}.json`)
+      let parsed = JSON.parse(data);
+      console.log("processing")
+      parsed.leaderboard.map(player => {
+        if (!Object.keys(totalStandings).includes(player.player)) {
+          totalStandings[player.player] = player
+        } else {
+          totalStandings[player.player].points += player.points;
+        }
       })
+    } catch (error) {
+      console.log(error)
+    }
   }
   Object.values(totalStandings).forEach(player => {
     player.position = 0;
