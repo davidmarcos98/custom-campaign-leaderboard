@@ -48,7 +48,11 @@ const TableView = ({users, updated, columns=["position", "player", "points"]} : 
         if (document.getElementById('medals')){
             medalsHeight = parseInt(getComputedStyle(document.getElementById('medals') as Element).height.split("px")[0]);
         }
-        setRowsPerPage(Math.floor((window.innerHeight - topContentHeight*2 - campaignSelectorHeight - campaignNameHeight - headerHeight - tabsHeight - medalsHeight) / 55))
+        let updateTimeHeight = 0;
+        if (document.getElementById('updateTime')){
+            updateTimeHeight = parseInt(getComputedStyle(document.getElementById('updateTime') as Element).height.split("px")[0]);
+        }
+        setRowsPerPage(Math.floor((window.innerHeight - topContentHeight*2 - campaignSelectorHeight - campaignNameHeight - headerHeight - tabsHeight - medalsHeight - updateTimeHeight) / 55))
     }, [])
     
     useEffect(() => {
@@ -122,8 +126,8 @@ const TableView = ({users, updated, columns=["position", "player", "points"]} : 
     ]);
     return (
         <>
-            <div className="flex justify-end p-2 px-3">
-                <p className="text-sm italic">Last updated: {Math.ceil((moment().unix() - updated / 1000)/60)} minutes ago</p>
+            <div id="updateTime" className="flex justify-end p-2 px-3 pt-0">
+                <p className="text-sm italic">Last updated: {Math.ceil((moment().unix() - updated)/60)} minutes ago</p>
             </div>
             <Table 
                 className="w-full items-center"

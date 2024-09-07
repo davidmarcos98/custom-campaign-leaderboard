@@ -84,12 +84,12 @@ export default function Campaign() {
     let leaderboardData: LeaderboardData = router.query.id ? require(`../../public/players_${router.query.id}.json`) : [];
     return (
         <DefaultLayout>
-            <section className="flex flex-col items-center justify-center gap-4 py-3 md:py-4 w-full h-full">
-                <p id="campaignName" className='text-4xl font-bold'>{campaignData.name || ""}</p>
+            <section className="flex flex-col items-center justify-center gap-2 py-1 md:py-4 w-full h-full">
+                <p id="campaignName" className='text-4xl font-bold' style={{ paddingTop: "2rem" }}>{campaignData.name || ""}</p>
                 { (selectedTab != "notyet" && campaignData && leaderboardData.leaderboard.length > 0) && (
                     <Tabs onSelectionChange={(key) => setSelectedTab(key as string)} selectedKey={selectedTab}>
                         <Tab key='leaderboard' title='Leaderboard'>
-                            <div id="leaderboardTable" className="xl:w-[30vw] lg:w-[40vw] md:w-[50vw] w-[90vw]">
+                            <div id="leaderboardTable" className="xl:w-[30vw] lg:w-[40vw] md:w-[50vw] w-[90vw]" style={{ paddingTop: "-1rem" }}>
                                 <TableView users={leaderboardData.leaderboard} updated={leaderboardData.updateTime}/>
                             </div>
                         </Tab>
