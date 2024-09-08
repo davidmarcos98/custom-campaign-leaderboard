@@ -127,7 +127,7 @@ const TableView = ({users, updated, columns=["position", "player", "points"]} : 
     return (
         <>
             <div id="updateTime" className="flex justify-end p-2 px-3 pt-0">
-                <p className="text-sm italic">Last updated: {Math.ceil((moment().unix() - updated)/60)} minutes ago</p>
+                <p className="text-sm italic">Last updated: {Math.ceil((moment().unix() - updated / (updated.toString().length > 10 ? 1000 : 1))/60)} minutes ago</p>
             </div>
             <Table 
                 className="w-full items-center"
