@@ -28,7 +28,7 @@ for campaign in campaigns:
 for name, player in main_lb.items():
     final_lb.append(player.__dict__)
 
-sorted(final_lb, key=lambda d: d['points'])
+final_lb = sorted(final_lb, key=lambda d: int(d['points']), reverse=True)
 for index, player in enumerate(final_lb):
     player['position'] = index + 1
 
