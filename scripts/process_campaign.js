@@ -24,7 +24,7 @@ const closeDates = [
 ]
 const campaigns = [
   76165,
-  null,
+  76166,
   null,
   null,
   null,
@@ -129,7 +129,8 @@ const processMap = async (map, CAMPAIGN_ID) => {
       position: player.position,
       time: `${player.time/1000}s`,
       player: player.playerName,
-      id: player._data.player.id
+      id: player._data.player.id,
+      date: player.date
     });
     playerIds[player.playerName] = player._data.player.id;
   }
