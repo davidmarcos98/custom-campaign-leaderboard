@@ -57,6 +57,11 @@ export async function getStaticPaths() {
         { params: { id: ["76165", "d93943a0-cb90-416d-bc71-b5a1bd4a6334"] } },
         { params: { id: ["76165", "26f4811e-462c-487f-8cf8-a44c0ecbf1ee"] } },
         { params: { id: ["76165", "7d5a11bf-bc6b-4511-9930-cd32ab50389e"] } },
+        { params: { id: ["76166", "39a86dca-d05f-4fe3-b43c-1d27cf5888e5"] } },
+        { params: { id: ["76166", "05c3b069-117f-4f57-97a6-20b602c1cc8d"] } },
+        { params: { id: ["76166", "9f61ef23-ad99-4dde-b8b9-ab7149e19b48"] } },
+        { params: { id: ["76166", "45f840d0-4819-4446-adb7-005a4f1ca6a3"] } },
+        { params: { id: ["76166", "81a71372-c48c-4c7d-b800-0ff6dce537fd"] } },
     ],
       fallback: false
     }
