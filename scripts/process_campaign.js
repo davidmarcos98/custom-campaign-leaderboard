@@ -155,7 +155,7 @@ async function doEverything() {
               position: 0,
               player: player,
               points: playerResults.leaderboard[player],
-              id: playerIds[player]
+              id: playerIds[player],
             })
           });
           lb.sort((a, b) => b.points - a.points);

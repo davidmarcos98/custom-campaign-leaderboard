@@ -23,7 +23,7 @@ for campaign in campaigns:
                 player.position = 0
                 main_lb[player.player] = player
             else:
-                main_lb[player.player].player += player.points
+                main_lb[player.player].points += player.points
 
 for name, player in main_lb.items():
     final_lb.append(player.__dict__)
