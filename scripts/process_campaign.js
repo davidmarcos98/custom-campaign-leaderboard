@@ -96,7 +96,12 @@ const processMap = async (map, CAMPAIGN_ID) => {
     uid: map.uid,
     url: map.url,
     leaderboard: [],
-    medals: {
+    medals: map.id == "81a71372-c48c-4c7d-b800-0ff6dce537fd" ? {
+      at: 46000,
+      gold: 50000,
+      silver: 60000,
+      bronze: 90000,
+    } : {
       at: medals.author,
       gold: medals.gold,
       silver: medals.silver,
