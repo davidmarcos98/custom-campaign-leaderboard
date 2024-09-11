@@ -132,7 +132,7 @@ const processMap = async (map, CAMPAIGN_ID) => {
     addPlayerPoints(player, medals);
     mapData.leaderboard.push({
       position: player.position,
-      time: `${player.time/1000}s`,
+      time: `${(player.time/1000).toFixed(3)}s`,
       player: player.playerName,
       id: player._data.player.id,
       date: player.date
